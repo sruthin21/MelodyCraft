@@ -1,6 +1,8 @@
 import { prismaClient } from "@/app/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+//@ts-ignore
+import youtubesearchapi from "youtube-search-api"
 
 const regex = new RegExp("^(https?:\\/\\/)?(www\\.)?(youtube\\.com\\/watch\\?v=|youtu\\.be\\/)([a-zA-Z0-9_-]{11})$");
 const CreateStreamSchema = z.object({
@@ -37,7 +39,12 @@ export async function POST(req: NextRequest) {
                 status: 400
             });
         }
-
+        const res = await youtubesearchapi.GetVideoDetails(extractedId);
+      //  console.log(res);
+        // const title = res.title;
+         const thumbnails = res.thumbnail.thumbnails;
+        //  thumbnails.sort((a: {width:Number},b:{width:Number}))
+        
         const stream = await prismaClient.stream.create({
             data: {
                 userId: data.creatorId,

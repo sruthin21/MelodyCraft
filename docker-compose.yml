@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+   postgres:
+     image: postgres:latest
+     container_name: postgresql_music
+     environment:
+        POSTGRES_PASSWORD: pass
+     volumes:
+      - music_volume:/var/lib/postgresql/data
+     ports:
+       - "5432:5432"
+
+volumes:
+  music_volume: 
+    driver: local 
