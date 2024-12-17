@@ -17,8 +17,7 @@ model User {
   id String @id @default(uuid())
   email String @unique
   provider Provider
-  streams Stream[]
-  upvotes Upvotes[]
+  spaces User_space[]
 }
 
 model Stream {
@@ -30,18 +29,31 @@ model Stream {
   smallImg String @default("")
   bigImg String  @default("")
   active Boolean @default(true)
+  spaceId String
+  space User_space @relation(fields: [spaceId],references: [id])
   upvotes Upvotes[]
-  userId   String
-  user User  @relation(fields: [userId],references: [id])  
+  downvotes Downvotes[]
 }
 
 model Upvotes{
   id String @id @default(uuid())
-  userId String
   streamId String
-  user User @relation(fields: [userId],references: [id])
   stream Stream @relation(fields: [streamId],references: [id])
-  @@unique([userId,streamId])
+}
+
+model Downvotes{
+  id String @id @default(uuid())
+  streamId String
+  stream Stream @relation(fields: [streamId],references: [id])
+}
+
+model User_space{
+  id String @id @default(uuid())
+  userId String
+  name String
+  category String @default("")
+  user User @relation(fields: [userId],references: [id])
+  stream Stream[]
 }
 
 enum StreamType {
